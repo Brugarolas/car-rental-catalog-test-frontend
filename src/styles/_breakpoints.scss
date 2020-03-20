@@ -1,0 +1,34 @@
+$breakpoints: (
+  //smallmobile: 420px,
+  //mobile: 590px,
+  tablet: 712px//,
+  //laptop: 1024px,
+  //desktop: 1280px,
+  //widescreen: 1720px
+);
+
+@mixin respond-above($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $breakpoint-value: map-get($breakpoints, $breakpoint);
+
+    @media (min-width: $breakpoint-value) {
+      @content;
+    }
+  } @else {
+    @warn 'Invalid breakpoint: #{$breakpoint}.';
+  }
+}
+
+.not-visible-above-tablet {
+  @include respond-above(tablet) {
+    display: none;
+  }
+}
+
+.only-visible-above-tablet {
+  display: none;
+
+  @include respond-above(tablet) {
+    display: block;
+  }
+}
