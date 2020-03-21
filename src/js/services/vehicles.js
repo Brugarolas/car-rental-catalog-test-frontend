@@ -1,21 +1,29 @@
-import vehicles from './vehicles.json';
+import fetch from '@/js/utils/fetch-ponyfill';
+import vehiclesFallback from './vehicles.json';
 
-const getVehicles = () => {
-  // Return a promise to simulate data is fetched asynchronously
-  return new Promise((resolve, reject) => {
-    resolve(vehicles.map(vehicle => {
-      const fields = [
-        vehicle.brand,
-        vehicle.model,
-        vehicle.tags.color,
-        vehicle.tags.year
-      ];
+const adaptVehicle = (vehicle) => {
+  const fields = [
+    vehicle.brand,
+    vehicle.model,
+    vehicle.tags.color,
+    vehicle.tags.year
+  ];
 
-      vehicle.searchField = fields.filter(field => field).join(' ').toLowerCase();
+  vehicle.searchField = fields.filter(field => field).join(' ').toLowerCase();
 
-      return vehicle;
-    }));
-  });
+  return vehicle;
+};
+
+const getVehicles = async () => {
+  try {
+    const response = await fetch('http://localhost/');
+    const data = await response.json();
+
+    return data.vehicles.map(adaptVehicle);
+  } catch (error) {
+    // Fallback - in case server fails somehow
+    return vehiclesFallback.map(adaptVehicle);
+  }
 };
 
 export default { getVehicles };
