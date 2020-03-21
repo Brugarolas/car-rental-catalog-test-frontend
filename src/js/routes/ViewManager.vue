@@ -1,5 +1,5 @@
 <template>
-  <transition :name="transitionName" :mode="transitionMode">
+  <transition :name="transitionName" :mode="transitionMode" @leave="saveScroll" @enter="restoreScroll">
     <keep-alive max="5">
       <router-view />
     </keep-alive>
@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import RestoreScroll from '@/js/utils/restore-scroll';
+
 const DEFAULT_TRANSITION = 'slide-left';
 const DEFAULT_TRANSITION_MODE = 'out-in';
 
@@ -32,7 +34,9 @@ export default {
     return {
       transitionName: null,
       transitionMode: DEFAULT_TRANSITION_MODE,
-      transitionEnterActiveClass: null
+      transitionEnterActiveClass: null,
+      prevPath: null,
+      nextPath: null
     };
   },
   created () {
@@ -42,10 +46,20 @@ export default {
       this.transitionMode = DEFAULT_TRANSITION_MODE;
       this.transitionEnterActiveClass = `${transitionName}-enter-active`;
       this.transitionName = transitionName;
+      this.prevPath = from.path;
+      this.nextPath = to.path;
       this.$shared.hasPreviousRoute = true;
 
       next();
     });
+  },
+  methods: {
+    saveScroll (el) {
+      RestoreScroll.saveScrollPosition(el, this.prevPath);
+    },
+    restoreScroll (el) {
+      RestoreScroll.restoreScrollPosition(el, this.nextPath);
+    }
   }
 };
 </script>
