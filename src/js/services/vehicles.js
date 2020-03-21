@@ -1,5 +1,6 @@
 import fetch from '@/js/utils/fetch-ponyfill';
 import vehiclesFallback from './vehicles.json';
+import { VEHICLES_URL } from '@/js/constants';
 
 const adaptVehicle = (vehicle) => {
   const fields = [
@@ -16,7 +17,7 @@ const adaptVehicle = (vehicle) => {
 
 const getVehicles = async () => {
   try {
-    const response = await fetch('http://localhost/');
+    const response = await fetch(VEHICLES_URL || 'http://localhost/');
     const data = await response.json();
 
     return data.vehicles.map(adaptVehicle);
