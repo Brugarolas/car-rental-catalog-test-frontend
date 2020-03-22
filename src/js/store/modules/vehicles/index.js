@@ -1,5 +1,4 @@
 import VehiclesService from '@/js/services/vehicles.js';
-import { ADD_VEHICLE, ADD_VEHICLES, REMOVE_VEHICLE, SET_LAST_VISITED } from './mutation-types';
 
 const defaultState = {
   vehicles: [],
@@ -30,19 +29,19 @@ const getters = {
 };
 
 const mutations = {
-  [ADD_VEHICLE] (state, vehicle) {
+  addVehicle (state, vehicle) {
     state.vehicles.push(vehicle);
 
     state.vehiclesMap.set(vehicle.id, vehicle);
   },
-  [ADD_VEHICLES] (state, vehicles) {
+  addVehicles (state, vehicles) {
     state.vehicles.push(...vehicles);
 
     vehicles.forEach(vehicle => {
       state.vehiclesMap.set(vehicle.id, vehicle);
     });
   },
-  [REMOVE_VEHICLE] (state, id) {
+  removeVehicles (state, id) {
     const vehicleExist = state.vehiclesMap.has(id);
 
     if (vehicleExist) {
@@ -53,7 +52,7 @@ const mutations = {
       }
     }
   },
-  [SET_LAST_VISITED] (state, id) {
+  setLastVisited (state, id) {
     state.lastVisited = id;
   }
 };
@@ -66,7 +65,7 @@ const actions = {
 
     return VehiclesService.getVehicles()
       .then((vehicles) =>
-        context.commit(ADD_VEHICLES, vehicles)
+        context.commit('addVehicles', vehicles)
       );
   }
 };

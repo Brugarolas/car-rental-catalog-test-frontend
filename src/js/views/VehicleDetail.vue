@@ -11,7 +11,6 @@
 
           <div class="detail__price-wrapper only-visible-above-tablet">
             <PriceDetail
-              v-if="vehicle"
               class="detail__price"
               :price="vehicle.price | toNumber"
               :discount="vehicle.offerDiscount | toNumber"
@@ -22,9 +21,8 @@
       </div>
     </article>
 
-    <ExpandableFooter class="not-visible-above-tablet">
+    <ExpandableFooter v-if="vehicle" class="not-visible-above-tablet">
       <PriceDetail
-        v-if="vehicle"
         :price="vehicle.price | toNumber"
         :discount="vehicle.offerDiscount | toNumber"
         :discount-apply="vehicle.isOnOffer"
@@ -40,7 +38,6 @@ import VehicleCard from '@/js/components/VehicleCard';
 import Description from '@/js/components/Description';
 import PriceDetail from '@/js/components/PriceDetail';
 import ExpandableFooter from '@/js/components/ExpandableFooter';
-import { SET_LAST_VISITED } from '@/js/store/modules/vehicles/mutation-types';
 
 export default {
   name: 'ViewVehicleDetail',
@@ -59,18 +56,18 @@ export default {
     const { id } = this.$route.params;
 
     this.vehicle = this.findVehicle(id);
-    this[SET_LAST_VISITED](id);
+    this.setLastVisited(id);
   },
   beforeRouteUpdate (to, from, next) {
     const { id } = to.params;
 
     this.vehicle = this.findVehicle(id);
-    this[SET_LAST_VISITED](id);
+    this.setLastVisited(id);
 
     next();
   },
   methods: {
-    ...mapMutations('vehicles', [SET_LAST_VISITED])
+    ...mapMutations('vehicles', ['setLastVisited'])
   }
 };
 </script>

@@ -25,7 +25,7 @@ const checkVehicleExist = (to, from, next) => {
 
     return goBack(from, next);
   }).catch(_ => {
-    console.log(_);
+    console.error(_);
     // empty - should show error message or something in the future
   });
 };
